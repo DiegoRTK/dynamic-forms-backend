@@ -1,0 +1,125 @@
+import { DynamicFormSchema } from '../interfaces/dynamic-form.interface';
+
+export const DYNAMIC_FORMS_MOCK: DynamicFormSchema[] = [
+  {
+    id: 1,
+    code: 'purchase-request',
+    name: 'Solicitud de compra',
+    description: 'Formulario dinámico cargado desde un mock del backend.',
+    version: '1.0.0',
+    sections: [
+      {
+        title: 'Información general',
+        description: 'Datos básicos del solicitante.',
+        fields: [
+          {
+            key: 'requesterName',
+            label: 'Nombre del solicitante',
+            type: 'text',
+            placeholder: 'Ej: Diego Sanchez',
+            validators: { required: true, minLength: 3 },
+            cssClass: 'col-md-6',
+          },
+          {
+            key: 'requesterEmail',
+            label: 'Correo electrónico',
+            type: 'email',
+            placeholder: 'correo@ejemplo.com',
+            validators: { required: true, email: true },
+            cssClass: 'col-md-6',
+          },
+          {
+            key: 'requestDate',
+            label: 'Fecha de solicitud',
+            type: 'date',
+            validators: { required: true },
+            cssClass: 'col-md-4',
+          },
+          {
+            key: 'priority',
+            label: 'Prioridad',
+            type: 'select',
+            value: 'medium',
+            options: [
+              { label: 'Baja', value: 'low' },
+              { label: 'Media', value: 'medium' },
+              { label: 'Alta', value: 'high' },
+            ],
+            validators: { required: true },
+            cssClass: 'col-md-4',
+          },
+        ],
+      },
+      {
+        title: 'Detalle económico',
+        description: 'Campos numéricos y fórmulas calculadas automáticamente.',
+        fields: [
+          {
+            key: 'quantity',
+            label: 'Cantidad',
+            type: 'number',
+            value: 1,
+            validators: { required: true, min: 1 },
+            cssClass: 'col-md-3',
+          },
+          {
+            key: 'unitPrice',
+            label: 'Precio unitario',
+            type: 'number',
+            value: 0,
+            validators: { required: true, min: 0 },
+            cssClass: 'col-md-3',
+          },
+          {
+            key: 'discount',
+            label: 'Descuento',
+            type: 'number',
+            value: 0,
+            validators: { min: 0 },
+            cssClass: 'col-md-3',
+          },
+          {
+            key: 'subtotal',
+            label: 'Subtotal',
+            type: 'formula',
+            readonly: true,
+            formula: 'quantity * unitPrice - discount',
+            dependsOn: ['quantity', 'unitPrice', 'discount'],
+            cssClass: 'col-md-3',
+          },
+          {
+            key: 'tax',
+            label: 'IVA 19%',
+            type: 'formula',
+            readonly: true,
+            formula: 'subtotal * 0.19',
+            dependsOn: ['subtotal'],
+            cssClass: 'col-md-3',
+          },
+          {
+            key: 'total',
+            label: 'Total',
+            type: 'formula',
+            readonly: true,
+            formula: 'subtotal + tax',
+            dependsOn: ['subtotal', 'tax'],
+            cssClass: 'col-md-3',
+          },
+        ],
+      },
+      {
+        title: 'Observaciones',
+        fields: [
+          {
+            key: 'notes',
+            label: 'Notas',
+            type: 'textarea',
+            placeholder: 'Agrega información adicional...',
+            validators: { maxLength: 500 },
+            cssClass: 'col-12',
+          },
+        ],
+      },
+    ],
+  },
+];
